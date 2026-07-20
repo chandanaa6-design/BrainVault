@@ -15,3 +15,15 @@ def create_flashcard(db: Session, card: schemas.FlashcardCreate):
 
 def get_flashcards(db: Session):
     return db.query(models.Flashcard).all()
+
+
+def delete_flashcard(db, flashcard_id):
+    flashcard = db.query(models.Flashcard).filter(
+        models.Flashcard.id == flashcard_id
+    ).first()
+
+    if flashcard:
+        db.delete(flashcard)
+        db.commit()
+
+    return flashcard

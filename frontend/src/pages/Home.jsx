@@ -1,18 +1,62 @@
+import { useEffect, useState } from "react";
+
+import FlashcardForm from "../components/flashcards/FlashcardForm";
+import FlashcardList from "../components/flashcards/FlashcardList";
+
+import { getFlashcards } from "../services/api";
+
 function Home() {
+
+    const [flashcards, setFlashcards] = useState([]);
+
+    const loadFlashcards = async () => {
+        try {
+            const response = await getFlashcards();
+            setFlashcards(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        loadFlashcards();
+    }, []);
+
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-xl">
+        <div className="min-h-screen bg-slate-900 py-10">
+            <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+
                 <h1 className="text-4xl font-bold text-center text-blue-600">
                     🧠 BrainVault
                 </h1>
 
-                <p className="text-center text-gray-600 mt-3">
-                    Tailwind CSS is working 🎉
+                <p className="text-center text-gray-600 mt-2">
+                    Smart Flashcard Learning System
                 </p>
 
-                <button className="mt-8 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
-                    Continue Building
-                </button>
+                <div className="mt-10">
+                    <h2 className="text-2xl font-semibold mb-4">
+                        Create Flashcard
+                    </h2>
+
+                    <FlashcardForm
+                        onFlashcardSaved={loadFlashcards}
+                    />
+                </div>
+
+                <hr className="my-10" />
+
+                <div>
+                    <h2 className="text-2xl font-semibold mb-4">
+                        Flashcards
+                    </h2>
+
+                    <FlashcardList
+                        flashcards={flashcards}
+                        onFlashcardDeleted={loadFlashcards}
+                    />
+                </div>
+
             </div>
         </div>
     );

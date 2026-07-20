@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -23,3 +23,21 @@ def get_flashcards(
     db: Session = Depends(get_db)
 ):
     return crud.get_flashcards(db)
+
+
+@router.delete("/{flashcard_id}")
+def delete_flashcard(
+    flashcard_id: int,
+    db: Session = Depends(get_db)
+):
+    deleted_card = crud.delete_flashcard(db, flashcard_id)
+
+    if not deleted_card:
+        raise HTTPException(
+            status_code=404,
+            detail="Flashcard not found"
+        )
+
+    return {
+        "message": "Flashcard deleted successfully"
+    }
