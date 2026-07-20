@@ -1,32 +1,59 @@
-import { useState } from "react";
-import { createFlashcard } from "../../services/api";
+import { useEffect, useState } from "react";
+import { createFlashcard, updateFlashcard } from "../../services/api";
 
-function FlashcardForm({ onFlashcardSaved }) {
+function FlashcardForm({
+    editingCard,
+    setEditingCard,
+    onFlashcardSaved,
+}) {
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
     const [subject, setSubject] = useState("");
     const [difficulty, setDifficulty] = useState("Easy");
 
+    useEffect(() => {
+        if (editingCard) {
+            setQuestion(editingCard.question);
+            setAnswer(editingCard.answer);
+            setSubject(editingCard.subject);
+            setDifficulty(editingCard.difficulty);
+        }
+    }, [editingCard]);
+
+    const clearForm = () => {
+        setQuestion("");
+        setAnswer("");
+        setSubject("");
+        setDifficulty("Easy");
+        setEditingCard(null);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            await createFlashcard({
-                question,
-                answer,
-                subject,
-                difficulty,
-            });
+            if (editingCard) {
+                await updateFlashcard(editingCard.id, {
+                    question,
+                    answer,
+                    subject,
+                    difficulty,
+                });
 
-            alert("✅ Flashcard Saved!");
+                alert("✅ Flashcard Updated!");
+            } else {
+                await createFlashcard({
+                    question,
+                    answer,
+                    subject,
+                    difficulty,
+                });
 
-            // Tell Home.jsx to reload all flashcards
-            onFlashcardSaved();
+                alert("✅ Flashcard Saved!");
+            }
 
-            setQuestion("");
-            setAnswer("");
-            setSubject("");
-            setDifficulty("Easy");
+            await onFlashcardSaved();
+            clearForm();
 
         } catch (error) {
             console.error(error);
@@ -78,7 +105,7 @@ function FlashcardForm({ onFlashcardSaved }) {
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg"
             >
-                Save Flashcard
+                {editingCard ? "Update Flashcard" : "Save Flashcard"}
             </button>
 
         </form>

@@ -41,3 +41,19 @@ def delete_flashcard(
     return {
         "message": "Flashcard deleted successfully"
     }
+
+@router.put("/{flashcard_id}", response_model=schemas.FlashcardResponse)
+def update_flashcard(
+    flashcard_id: int,
+    card: schemas.FlashcardCreate,
+    db: Session = Depends(get_db)
+):
+    updated_card = crud.update_flashcard(db, flashcard_id, card)
+
+    if not updated_card:
+        raise HTTPException(
+            status_code=404,
+            detail="Flashcard not found"
+        )
+
+    return updated_card

@@ -1,5 +1,10 @@
 import { deleteFlashcard } from "../../services/api";
-function FlashcardList({ flashcards, onFlashcardDeleted }) {
+
+function FlashcardList({
+    flashcards,
+    onFlashcardDeleted,
+    setEditingCard,
+}) {
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this flashcard?"
@@ -13,7 +18,6 @@ function FlashcardList({ flashcards, onFlashcardDeleted }) {
             alert("✅ Flashcard deleted!");
 
             onFlashcardDeleted();
-
         } catch (error) {
             console.error(error);
             alert("❌ Error deleting flashcard.");
@@ -30,9 +34,7 @@ function FlashcardList({ flashcards, onFlashcardDeleted }) {
 
     return (
         <div className="space-y-4">
-
             {flashcards.map((card) => (
-
                 <div
                     key={card.id}
                     className="border rounded-lg p-5 shadow"
@@ -52,7 +54,15 @@ function FlashcardList({ flashcards, onFlashcardDeleted }) {
                     <p className="mt-2">
                         <strong>Difficulty:</strong> {card.difficulty}
                     </p>
-                    <div className="mt-4">
+
+                    <div className="mt-4 flex gap-3">
+                        <button
+                            onClick={() => setEditingCard(card)}
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
+                        >
+                            ✏️ Edit
+                        </button>
+
                         <button
                             onClick={() => handleDelete(card.id)}
                             className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
@@ -60,11 +70,8 @@ function FlashcardList({ flashcards, onFlashcardDeleted }) {
                             🗑 Delete
                         </button>
                     </div>
-
                 </div>
-
             ))}
-
         </div>
     );
 }

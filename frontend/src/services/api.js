@@ -18,5 +18,8 @@ export const createFlashcard = (flashcard) => {
 export const deleteFlashcard = (id) => {
     return api.delete(`/flashcards/${id}`);
 };
-
+// Update a flashcard
+export const updateFlashcard = (id, flashcard) => {
+    return api.put(`/flashcards/${id}`, flashcard);
+};
 export default api;

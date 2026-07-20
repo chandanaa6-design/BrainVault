@@ -8,6 +8,7 @@ import { getFlashcards } from "../services/api";
 function Home() {
 
     const [flashcards, setFlashcards] = useState([]);
+    const [editingCard, setEditingCard] = useState(null);
 
     const loadFlashcards = async () => {
         try {
@@ -40,8 +41,11 @@ function Home() {
                     </h2>
 
                     <FlashcardForm
+                        editingCard={editingCard}
+                        setEditingCard={setEditingCard}
                         onFlashcardSaved={loadFlashcards}
                     />
+
                 </div>
 
                 <hr className="my-10" />
@@ -54,7 +58,9 @@ function Home() {
                     <FlashcardList
                         flashcards={flashcards}
                         onFlashcardDeleted={loadFlashcards}
+                        setEditingCard={setEditingCard}
                     />
+
                 </div>
 
             </div>
