@@ -10,6 +10,9 @@ function Home() {
     const [flashcards, setFlashcards] = useState([]);
     const [editingCard, setEditingCard] = useState(null);
 
+    // NEW
+    const [searchTerm, setSearchTerm] = useState("");
+
     const loadFlashcards = async () => {
         try {
             const response = await getFlashcards();
@@ -22,6 +25,17 @@ function Home() {
     useEffect(() => {
         loadFlashcards();
     }, []);
+
+    // NEW
+    const filteredFlashcards = flashcards.filter((card) => {
+        const search = searchTerm.toLowerCase();
+
+        return (
+            card.question.toLowerCase().includes(search) ||
+            card.answer.toLowerCase().includes(search) ||
+            card.subject.toLowerCase().includes(search)
+        );
+    });
 
     return (
         <div className="min-h-screen bg-slate-900 py-10">
@@ -45,18 +59,27 @@ function Home() {
                         setEditingCard={setEditingCard}
                         onFlashcardSaved={loadFlashcards}
                     />
-
                 </div>
 
                 <hr className="my-10" />
 
                 <div>
+
                     <h2 className="text-2xl font-semibold mb-4">
                         Flashcards
                     </h2>
 
+                    {/* Search Box */}
+                    <input
+                        type="text"
+                        placeholder="🔍 Search by question, answer or subject..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full border rounded-lg p-3 mb-6"
+                    />
+
                     <FlashcardList
-                        flashcards={flashcards}
+                        flashcards={filteredFlashcards}
                         onFlashcardDeleted={loadFlashcards}
                         setEditingCard={setEditingCard}
                     />

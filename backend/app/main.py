@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-from .database import Base, engine
-from .routes.flashcards import router as flashcard_router
+import os
 
-# Create all database tables
+from app.database import Base, engine
+from app.routes.flashcards import router as flashcard_router
+
+# Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -22,7 +25,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# --------------------------------------
+
+# ---------------- Upload Folder ----------------
+os.makedirs("uploads", exist_ok=True)
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads"),
+    name="uploads",
+)
+# -----------------------------------------------
 
 app.include_router(flashcard_router)
 
@@ -32,3 +44,14 @@ def root():
     return {
         "message": "Welcome to BrainVault API 🚀"
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        app,
+        host="127.0.0.1",
+        port=8000,
+        reload=False
+    )

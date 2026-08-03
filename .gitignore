@@ -1,31 +1,41 @@
-# =========================
 # Python
-# =========================
 backend/.venv/
-backend/__pycache__/
-backend/*.db
-backend/*.sqlite3
+__pycache__/
 *.pyc
 
-# =========================
-# React
-# =========================
+# PyInstaller
+backend/build/
+backend/dist/
+backend/*.spec
+
+# Uploads
+backend/uploads/
+
+# Electron
+frontend/release/
+frontend/out/
+frontend/backend.exe
+
+# Node
 frontend/node_modules/
+
+# Vite
 frontend/dist/
 
-# =========================
-# Environment Variables
-# =========================
-.env
-*.env
+# Logs
+*.log
 
-# =========================
-# VS Code
-# =========================
-.vscode/
-
-# =========================
-# OS Files
-# =========================
+# OS
 .DS_Store
 Thumbs.db
+
+
+# Environment
+backend/.env
+
+# Local database
+backend/brainvault.db
+backend/*.db
+
+# Backups
+backend/brainvault_backup.json
