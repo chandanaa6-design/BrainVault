@@ -51,9 +51,13 @@ function MyCards() {
     const loadFlashcards = async () => {
         try {
             const response = await getFlashcards();
+
+            console.log("API Response:", response.data);
+            console.log("Number of cards:", response.data.length);
+
             setFlashcards(response.data.reverse());
         } catch (error) {
-            console.error(error);
+            console.error("Load Error:", error);
         }
     };
 
